@@ -597,8 +597,6 @@ async def cb_acc_list(callback_query: types.CallbackQuery):
 
 @dp.callback_query_handler(lambda c: c.data == "menu_broadcast")
 async def cb_broadcast(callback_query: types.CallbackQuery):
-    await bot.answer_callback_query(callback_query.id)
-    
     db = SessionLocal()
     try:
         accounts = db.query(Account).filter_by(user_id=callback_query.from_user.id).all()
@@ -608,6 +606,8 @@ async def cb_broadcast(callback_query: types.CallbackQuery):
     if not accounts:
         await bot.answer_callback_query(callback_query.id, "Сначала добавьте аккаунт!", show_alert=True)
         return
+
+    await bot.answer_callback_query(callback_query.id)
     
     keyboard = InlineKeyboardMarkup(row_width=1)
     for acc in accounts:
